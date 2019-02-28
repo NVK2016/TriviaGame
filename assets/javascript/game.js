@@ -7,12 +7,13 @@ $(document).ready(function(){
 	var correctCount = 0 ; 
 	var incorrectCount = 0 ; 
 	var unasweredCount = 0 ; 
-	var userAnswer; 
+	var currentQuestion = 0 ; 
+	var currentAnswer ; 
 	var timeRemaining = 60; //a minute 
 	var interValid; 
 	var clockRunning = true;
 
-	//Object list 
+	//Object Trivia Q&A list  
 	var triviaQuestions =[ {
 
 			question: "Pupusas, handmade thick stuffed corn tortillas, are a traditional dish from what country?", 
@@ -29,8 +30,8 @@ $(document).ready(function(){
            "Patrick Loves Orange Soda"
         ],
 
-		correctAnswer: "0", 
-		imageLink: "#"
+		correctAnswer: 0, 
+		imageLink: "assets/images/loading.gif"
       },
 		];
 
@@ -38,7 +39,7 @@ $(document).ready(function(){
 	//     FUNCTIONS
 	//------------------------------------------
 
-	//Takes seconds and element as its parameter 
+	//Starts the clock 
 	function countDown(){
 
 		if (clockRunning) {
@@ -46,21 +47,23 @@ $(document).ready(function(){
 			timeRemaining--; //Decrement the value 
 
 			//Display time is this format 00:00 
-			var quizTime = timeConverter(timeRemaining); 
-			$("#timer").html("<h2>" + quizTime + "</h2>");
+			var convertedTime = timeConverter(timeRemaining); 
+			$("#timer").html("<h2> Time Remaining " + convertedTime + "</h2> <br/>");
+			// console.log("timeRemaining: "+ timeRemaining);
 
-			console.log("timeRemaining: "+ timeRemaining);
-
-			interValid = setInterval(countDown,1000);//run after every second 
+			// interValid = setInterval(countDown,1000);//run after every second 
 
 			if( timeRemaining === 0 ){
 				//stopt the clock 
 				stopCountDown(); 
 				// Timer is replaces with text
-				$("#timer").html("<h4>ALL DONE</h4>");
-				// Quiz is replaced with scores/quiz data
-				$("#quiz-container").html("<h4>Correct Answers: " + quiz.correctAnswers + "</h4>");
-				$("#quiz-container").append("<h4>Wrong Answers: " + quiz.wrongAnswers + "</h4>");
+				$("#timer").html("<h4>Times Up ! ALL Done!!</h4>");
+				$("btn-reset").attr("style", "display:block;");
+
+				// Scoreboard  data is displayed onces time is up 
+				$("#questionBlock").html("<h4>Correct Answers: " + correctCount + "</h4>");
+				$("#answerList").html("<h4>Wrong Answers: " + incorrectCount + "</h4>");
+				$("#answerList").append("<h4>UnAnswered: " + unasweredCount+ "</h4>");
 				
 			}
 		}
@@ -100,12 +103,104 @@ $(document).ready(function(){
 		return minutes + ":" + seconds;
 	}
 
+	function renderQuestionAns(){
+		
+		//Continue the timer clock 
+		interValid = setInterval(countDown,1000);//run after every second 
+
+		// console.log('renderQuestionAns' + triviaQuestions.length);
+		
+		$('.thisChoice').empty();  //clear old Answe list 
+
+		$("#questionBlock").html( "<center><p id='questiontext' class='text-center text-danger'> "+ triviaQuestions[currentQuestion].question + " <br/></p></center>"); 
+		// console.log(triviaQuestions[currentQuestion].choices);
+
+		for(var i = 0; i < 4; i++)
+		{
+			var answerList = $("<div class='text-center text-danger'>");
+			answerList.text(triviaQuestions[currentQuestion].choices[i]);
+			answerList.attr({'data-index': i });
+			answerList.addClass('thisChoice');
+			$('#answerList').append(answerList);
+		}
+		// console.log("Correct ans is:" + triviaQuestions[currentQuestion].correctAnswer);
+		currentAnswer = triviaQuestions[currentQuestion].correctAnswer;
+
+		nextQuestion();
+
+		//Onclick of the ANswer Buttons 
+		$(".thisChoice").click(function () {
+
+			var id = $(this).attr('data-index');
+			console.log("Button iD:" + id); 
+
+			if (id === currentAnswer ){
+					// answered = true; // stops the timer
+					
+					correctAnswers();
+			} else {
+					// answered = true; //stops the timer
+					
+					incorrectAnswers(id);
+			}
+	});
+
+		//if player doesn't click any button 
+		console.log($(".thisChoice")); 
+		timeOuts(); 
+
+	}
+
+	function newQuestion(){
+		if(currentQuestion == (triviaQuestions.length-1)){
+			// setTimeout(scoreboard, 5000)
+		} else{
+			currentQuestion++; 
+			setInterval(renderQuestionAns, 5000); // render next Question in 5 secs 
+		}
+	}
+	
+	function correctAnswers() {
+		correctCount++;
+		$('#questionBlock').html("Wohoo! Awesome you knew it! <br/>");
+		$('#questionBlock').append("THE ANSWER IS: " + triviaQuestions[currentQuestion].choices[currentAnswer]);
+		$('#answerList').html("<img src='"+triviaQuestions[currentQuestion].imageLink + "'/>");
+		// resetRound();
+	}
+
+	function incorrectAnswers(answerID) {
+		incorrectCount++;
+		$('#questionBlock').html("OH NO! THAT's not it <br />");
+		$('#questionBlock').append("YOU CHOSE: " + triviaQuestions[currentQuestion].choices[answerID] + ".....HOWEVER THE ANSWER IS: " + triviaQuestions[currentQuestion].choices[currentAnswer]);
+		$('#answerList').html("<img src='"+triviaQuestions[currentQuestion].imageLink + "'/>");
+		// resetRound();
+	}
+
+
+	function timeOuts() {
+		unasweredCount++;
+		$('#questionBlock').text("YOU FAILED TO CHOOSE AN ANSWER");
+		// resetRound();
+}
+
+
+
 	// Main PROCESS -  functions
 	//--------------------------------------
 
 	console.log( "ready!" );
 
-	//Calling the Timer function 
-	countDown(); 
+	//On click of start button the game starts 
+	$('#btn-start').click(function () {
+		console.log("Start Button clicked");
+		$('#btn-start').attr("style", "display:none;");
+		$('#btn-reset').attr("style", "display:none;");
+		//Start Game 
+		//Calling the Timer function 
+		countDown(); 
+
+		renderQuestionAns();
+
+	});
 
 });	
