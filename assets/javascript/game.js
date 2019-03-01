@@ -89,12 +89,11 @@ $(document).ready(function () {
 			$("#timer").html("<h2> Time Remaining " + convertedTime + "</h2>");
 
 			// console.log("Time is inside countDown "+ timeRemaining);
-
+console.log("countDown Length: "+ triviaQuestions.length); 
+			console.log("countDown currentQuestion: "+ currentQuestion);
+			console.log("timeRemaining" + timeRemaining);
 			if (timeRemaining === 0) {
-				
-			// 	console.log("countDown Length: "+ triviaQuestions.length); 
-			// console.log("countDown currentQuestion: "+ currentQuestion); 
-
+			
 				// Player doesnt answer and time runs out 
 				if(( !answeredBtnClicked) ){
 					timeOuts(); 
@@ -111,15 +110,10 @@ $(document).ready(function () {
 			}
 			else {
 				//IN CASE LAST QUESTION DISPLAY SCORE BOARD 
-				if( currentQuestion == triviaQuestions.length -1  ) {
-					//UNANSEWERED 
-					if (! answeredBtnClicked){
-						timeOuts(); 
-						quizResults(); //Display scoreboard when reaches the last question 
-					}//OR ANSWERED 
-					else {
+				if( (currentQuestion === triviaQuestions.length -1  ) && (timeRemaining !== 0) ){
+						stopCountDown();
 						quizResults(); 
-					}
+						// $('#btn-reset').attr("style", "display:block;");
 				}
 				
 			}
@@ -268,7 +262,7 @@ $(document).ready(function () {
 
         // Timer is replaces with text
         $("#timer").html("<h4>Times Up ! ALL Done!!</h4>");
-        var button = $("btn-reset") ; 
+        var button = $("#btn-reset") ; 
 		button.attr("style", "display:block;"); //Show play again button 
 
         $("#questionBlock").html("<h4 class='text-sucess'>Correct Answers: " + correctCount + "</h4>");
@@ -282,6 +276,22 @@ $(document).ready(function () {
 		countDown();
 
 		renderQuestionAns();
+	}
+
+	//Resets all values used 
+	function resetGame() {
+
+		 $("#timer").empty();
+		$("#questionBlock").empty();
+		$("#answerList").empty();
+		currentQuestion = 0; 
+		timeRemaining = 15; 
+		correctCount = 0;
+		incorrectCount = 0;
+		unasweredCount = 0;
+		answeredBtnClicked = false; 
+		clockRunning = true; 
+
 	}
 	// Main PROCESS -  functions
 	//--------------------------------------
@@ -306,7 +316,9 @@ $(document).ready(function () {
 		console.log("Reset Button clicked");
 		$('#btn-start').hide();
 		$('#btn-reset').hide(); 
-		//Start Game 
+		//reset the entire container  section for a new game 
+		resetGame(); 
+		//Start a fresh  Game 
 		gameStart();
 
 	});
