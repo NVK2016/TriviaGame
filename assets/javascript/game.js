@@ -18,24 +18,51 @@ $(document).ready(function () {
 	var triviaQuestions = [
 		{
 
-			question: "Pupusas, handmade thick stuffed corn tortillas, are a traditional dish from what country?",
-			choices: ["Ethiopia", "El Salvadore", "Peru", "Guatamala"],
-			correctAnswer: 1,
-			imageLink: "assets/images/logo_JavaScript.png"
+			question: "What is another name for Superman?",
+			choices: ["The Red Redeemer", "The MAsked Avenger", "The Caped Crusader", "The Man of Steel"],
+			correctAnswer: 3,
+			imageLink: "assets/images/superman.gif"
 		},
 		{
-			question: "Who Loves Orange Soda?",
-			choices: ["Kel Loves Orange Soda", "Arnold Loves Orange Soda", "Kora Loves Orange Soda", "Patrick Loves Orange Soda"],
-			correctAnswer: 0,
-			imageLink: "assets/images/loading.gif"
+			question: "What is Deadpool's real name?",
+			choices: ["Mike Powers", "Richard Maxwell", "Wade Wilson", "Harry Dodson"],
+			correctAnswer: 2,
+			imageLink: "assets/images/deadpool.jpeg"
 		},
 		{
-			question: "In the cartoon series, the Flintstones, what was the Great Gazoo?",
-			choices: ["A Dragon", "A club", "An alien", "a giraffee"],
+			question: "What is Superman's only weakness?",
+			choices: ["Samsonite", "Cosmonite", "Kryptonite", "Plutonite"],
 			correctAnswer : 2,
-			imageLink: "assets/iamges/flintstones.png"
+			imageLink: "assets/images/kryptonite-thanks1.jpg"
+		},
+		{
+			question: "Who was the first villian in the Spiderman comics?",
+			choices: ["Big Wheel", "Carnage", "Chameleon", "Doctor Octopus"],
+			correctAnswer: 2, 
+			imageLink: "assets/images/Chameleon_Marvel.jpg"
+		},{
+			question: "Who is the prime starring character in the Flash?",
+			choices: ["Candis Patton", "Grant Gustin", "Rick Cosnet", "Carlos Valdes"],
+			correctAnswer: 1,
+			imageLink: "assets/images/flash.jpg"
+		},{
+			question: "Who among flash's sidekick also exhibits superhuman speed?",
+			choices: ["Cisco", "Kid Flash", "Harrison Wells", "Caitlin Snow"],
+			correctAnswer: 1,
+			imageLink: "assets/images/kidflash.jpg"
+		},{
+			question: "Which year was Wonder Woman first appearance in Dc  all-star comics?",
+			choices: ["1933","1934","1941","1958"],
+			correctAnswer: 2,
+			imageLink: "assets/images/wonderwoman.jpg"
+		},{
+			question: "What is the name of Wonder Woman mother?",
+			choices: ["Queen Hippolyta","Queen Cleopatra", "Queen lina", "Queen Nicholina"],
+			correctAnswer: 0,
+			imageLink: "assets/images/wondermom.jpg"
 		}
 	];
+	
 
 	//     FUNCTIONS
 	//------------------------------------------
@@ -51,31 +78,42 @@ $(document).ready(function () {
 			var convertedTime = timeConverter(timeRemaining);
 			$("#timer").html("<h2> Time Remaining " + convertedTime + "</h2> <br/>");
 
+			console.log("Time is inside countDown "+ timeRemaining);
+
 			if (timeRemaining === 0) {
-				//stop the clock 
-				stopCountDown();
-				// timeRemaining = 15;
+				
 				// Player doesnt answer and time runs out 
 				if(( !answeredBtnClicked) ){
 					timeOuts(); 
 				}
 				
-				//Move to next Question 
-				nextQuestion(); 
-			} 
+				if( currentQuestion !== triviaQuestions.length ){
+					//Move to next Question 
+					nextQuestion(); 
+				}
+				else {
+					quizResults(); //Display scoreboard when reaches the last question 
+				}
+			}
+			console.log("countDown Length: "+ triviaQuestions.length); 
+				console.log("countDown currentQuestion: "+ currentQuestion); 
 			
 		}
 	}
 
 	function nextQuestion(){
-	
+		//Reset the clock running variable to true 
+		clockRunning = true; 
+
 		currentQuestion++;
-		showQA = setInterval(renderQuestionAns, 1000);
+		//Calling the function once in set interval 
+		showQA = setTimeout(renderQuestionAns, 5000);
 	}
 
 	//Resets the clock to stop 
 	function stopCountDown() {
-		timeRemaining = 0; 
+		console.log("stopCountDown");
+		timeRemaining = 15; 
 		clearInterval(interValid);
 		clockRunning = false;  //Reset  
 
@@ -103,17 +141,22 @@ $(document).ready(function () {
 		return minutes + ":" + seconds;
 	}
 
-	function renderQuestionAns() {
-	
+	function renderQuestionAns() { 
+
 		//Continue the timer clock 
 		interValid = setInterval(countDown, 1000);//run after every second 
-		// clearInterval(showQA); 
+		clearInterval(showQA); 
+		//Reset the button click event variable to false 
+		answeredBtnClicked = false; 
+		$('#answerList').empty(); 
 
 		//Display Question 
 		$("#questionBlock").text(triviaQuestions[currentQuestion].question);
-		console.log("Question#: " + currentQuestion);
+		console.log("renderQuestionAns#: " + currentQuestion);
+
 		//Dynamically creating buttons 
 		dynamicAnswerBtn(); 
+
 		console.log("timeRemaining: "+ timeRemaining + " answeredBtnClicked:"+ answeredBtnClicked);
 		
 	}
@@ -159,11 +202,13 @@ $(document).ready(function () {
         correctCount++;
 
 		//Display message 
-		$("#timer").html("<h2> Time Remaining: 00:00 </h2> <br/>");
         $('#questionBlock').html("Wohoo! Awesome you knew it! <br/>");
         $('#questionBlock').append("THE ANSWER IS: " + triviaQuestions[currentQuestion].choices[currentAnswer]);
         $('#answerList').html("<center><img class='img-thumbnail' src='" + triviaQuestions[currentQuestion].imageLink +"'/></center>");
-   	 }
+			
+		//Move to next Question 
+		nextQuestion();
+	}
 
  	function incorrectAnswers(answerID) {
 		console.log("InCorrect ans fun"+ timeRemaining);
@@ -172,11 +217,13 @@ $(document).ready(function () {
 		//Count the in-correct answer 
 	    incorrectCount++;
 		//Display MEasges 
-		$("#timer").html("<h2> Time Remaining: 00:00 </h2> <br/>");
         $('#questionBlock').html("OH NO! THAT's not it <br />");
         $('#questionBlock').append("YOU CHOSE: " + triviaQuestions[currentQuestion].choices[answerID] + ".....HOWEVER THE ANSWER IS: " + triviaQuestions[currentQuestion].choices[currentAnswer]);
         $('#answerList').html("<center><img class='img-thumbnail' src='" + triviaQuestions[currentQuestion].imageLink + "'/></center>");
-	}
+			
+		//Move to next Question 
+		nextQuestion();	
+}
 	
 	
 	function timeOuts() {
@@ -184,8 +231,10 @@ $(document).ready(function () {
 		// clearInterval(showQA);
 		stopCountDown(); 
         unasweredCount++;
+		// answeredBtnClicked = true;
 		$("#timer").html("<h2> Time Remaining " + timeRemaining + "</h2> <br/>");
         $('#questionBlock').text("YOU FAILED TO CHOOSE AN ANSWER");
+        $('#questionBlock').append("The answer is " +triviaQuestions[currentQuestion].choices[currentAnswer] );
         $('#answerList').html("<center><img class='img-thumbnail' src='"+triviaQuestions[currentQuestion].imageLink + "'/></center>");
 	}
 	
@@ -201,6 +250,7 @@ $(document).ready(function () {
 	 }
 
 	function gameStart() {
+		
 		//Calling the Timer function 
 		countDown();
 
