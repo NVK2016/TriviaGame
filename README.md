@@ -10,7 +10,15 @@ This game test your knowlege about Marvel & DC comics. It is a 15 sec time based
 
 
 ## GAME SCREENSHOT : 
+![Start-Screen](https://github.com/NVK2016/TriviaGame/blob/master/assets/images/Trivia-Start-Page.png?raw=true)
 
+<br/> When the player is displayed with a Question 
+
+![Question-Screen](https://github.com/NVK2016/TriviaGame/blob/master/assets/images/Trivia-Screenshot-Question.png?raw=true)
+
+<br /> Answer Screen is displayed 
+
+![Answer-Screen](https://github.com/NVK2016/TriviaGame/blob/master/assets/images/Trivia-Screenshot-Result.png?raw=true)
 
 ### GAME LINK 
 <a href="https://nvk2016.github.io/TriviaGame/">Ultimate Superhero Trivia</a>
@@ -25,4 +33,4 @@ This game test your knowlege about Marvel & DC comics. It is a 15 sec time based
 
 ### KNOW BUG IN THE PROGRAM : 
 
-On the final screen, it does show the scoreboard results  but doesnt show the restart button inspite of setting the display:block property on the button . 
+On the final screen, it does show the scoreboard results  but doesnt considered the lastrecord in case if the question has timeout. 
