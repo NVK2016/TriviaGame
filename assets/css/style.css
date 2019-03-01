@@ -22,3 +22,8 @@ body {
 .container{
     background-color: lightgoldenrodyellow; 
 }
+
+img{
+    width:250px; 
+    height:250px; 
+}
