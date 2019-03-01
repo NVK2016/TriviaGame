@@ -3,24 +3,29 @@
 body {
     margin:auto; 
     height: auto; 
+    font-family: 'Rye', cursive;
+    /* background-image: url('../images/background.jpg'); */
+    background-image: url('../images/marvel-comics-dc-comics-wallpapers.jpg');
 }
 
 #timer{
-    text-align: center; 
-    margin: 20px;
     font-size:18px; 
-    color:blue; 
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 #questionBlock{
-    color:green; 
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    text-align: center;
+    /* color:green;  */
+    font-family: 'Rye', cursive;
+    font-size:18px; 
+    /* text-align: center; */
 }
 
+
 .container{
-    background-color: lightgoldenrodyellow; 
+    background-color: #FFFFD5; 
+    font-family: 'Rye', cursive;
+    margin: 5%; 
+    margin-top:8%;
 }
 
 img{

@@ -17,7 +17,6 @@ $(document).ready(function () {
 	//Object Trivia Q&A list  
 	var triviaQuestions = [
 		{
-
 			question: "What is another name for Superman?",
 			choices: ["The Red Redeemer", "The MAsked Avenger", "The Caped Crusader", "The Man of Steel"],
 			correctAnswer: 3,
@@ -60,6 +59,17 @@ $(document).ready(function () {
 			choices: ["Queen Hippolyta","Queen Cleopatra", "Queen lina", "Queen Nicholina"],
 			correctAnswer: 0,
 			imageLink: "assets/images/wondermom.jpg"
+		},{
+			question: "What's the name of Quick Silver's alter ego?",
+			choices: ["Pietro Don Maximoff", "Pietro Django Maximoff","Pietro Django", "Pietro Lang"],
+			correctAnswer : 1, 
+			imageLink: "assets/images/quick-silver-alterego.jpeg"
+		},
+		{
+			question: "In 'Iron Man', what superhero identity was assumed by James Rhodes, Tony Stark's personal pilot and confidant?",
+			choices: ["War Machine", "Captain America","Black Bolt", "Ant-Man"],
+			correctAnswer : 0, 
+			imageLink: "assets/images/warmachine.gif"
 		}
 	];
 	
@@ -76,43 +86,58 @@ $(document).ready(function () {
 
 			//Display time is this format 00:00 
 			var convertedTime = timeConverter(timeRemaining);
-			$("#timer").html("<h2> Time Remaining " + convertedTime + "</h2> <br/>");
+			$("#timer").html("<h2> Time Remaining " + convertedTime + "</h2>");
 
-			console.log("Time is inside countDown "+ timeRemaining);
+			// console.log("Time is inside countDown "+ timeRemaining);
 
 			if (timeRemaining === 0) {
 				
+			// 	console.log("countDown Length: "+ triviaQuestions.length); 
+			// console.log("countDown currentQuestion: "+ currentQuestion); 
+
 				// Player doesnt answer and time runs out 
 				if(( !answeredBtnClicked) ){
 					timeOuts(); 
 				}
-				
-				if( currentQuestion !== triviaQuestions.length ){
+					
+
+				if( currentQuestion == triviaQuestions.length -1  ){
+					quizResults(); //Display scoreboard when reaches the last question 
+				}
+				else {
 					//Move to next Question 
 					nextQuestion(); 
 				}
-				else {
-					quizResults(); //Display scoreboard when reaches the last question 
-				}
 			}
-			console.log("countDown Length: "+ triviaQuestions.length); 
-				console.log("countDown currentQuestion: "+ currentQuestion); 
-			
+			else {
+				//IN CASE LAST QUESTION DISPLAY SCORE BOARD 
+				if( currentQuestion == triviaQuestions.length -1  ) {
+					//UNANSEWERED 
+					if (! answeredBtnClicked){
+						timeOuts(); 
+						quizResults(); //Display scoreboard when reaches the last question 
+					}//OR ANSWERED 
+					else {
+						quizResults(); 
+					}
+				}
+				
+			}
 		}
 	}
 
 	function nextQuestion(){
-		//Reset the clock running variable to true 
+		//Reset the clock running variable to true so the timer can show the time again 
 		clockRunning = true; 
 
 		currentQuestion++;
 		//Calling the function once in set interval 
-		showQA = setTimeout(renderQuestionAns, 5000);
+		showQA = setTimeout(renderQuestionAns, 3000);
 	}
 
 	//Resets the clock to stop 
 	function stopCountDown() {
-		console.log("stopCountDown");
+		// console.log("stopCountDown");
 		timeRemaining = 15; 
 		clearInterval(interValid);
 		clockRunning = false;  //Reset  
@@ -152,12 +177,13 @@ $(document).ready(function () {
 
 		//Display Question 
 		$("#questionBlock").text(triviaQuestions[currentQuestion].question);
-		console.log("renderQuestionAns#: " + currentQuestion);
+		$("#questionBlock").append("<br /> " );
+		// console.log("renderQuestionAns#: " + currentQuestion);
 
 		//Dynamically creating buttons 
 		dynamicAnswerBtn(); 
 
-		console.log("timeRemaining: "+ timeRemaining + " answeredBtnClicked:"+ answeredBtnClicked);
+		// console.log("timeRemaining: "+ timeRemaining + " answeredBtnClicked:"+ answeredBtnClicked);
 		
 	}
 
@@ -194,7 +220,7 @@ $(document).ready(function () {
 
 	function correctAnswers() {
 
-		console.log("Correct ans fun"+ timeRemaining);
+		// console.log("Correct ans fun"+ timeRemaining);
 		
 		//stop the clock 
 		stopCountDown(); 
@@ -211,7 +237,7 @@ $(document).ready(function () {
 	}
 
  	function incorrectAnswers(answerID) {
-		console.log("InCorrect ans fun"+ timeRemaining);
+		// console.log("InCorrect ans fun"+ timeRemaining);
 		//stop the clock 
 		stopCountDown(); 
 		//Count the in-correct answer 
@@ -232,9 +258,9 @@ $(document).ready(function () {
 		stopCountDown(); 
         unasweredCount++;
 		// answeredBtnClicked = true;
-		$("#timer").html("<h2> Time Remaining " + timeRemaining + "</h2> <br/>");
-        $('#questionBlock').text("YOU FAILED TO CHOOSE AN ANSWER");
-        $('#questionBlock').append("The answer is " +triviaQuestions[currentQuestion].choices[currentAnswer] );
+		$("#timer").html("<h2> Time Remaining " + timeRemaining + "</h2>");
+        $('#questionBlock').text("YOU FAILED TO CHOOSE AN ANSWER \n");
+        $('#questionBlock').append("\n The answer is " +triviaQuestions[currentQuestion].choices[currentAnswer] );
         $('#answerList').html("<center><img class='img-thumbnail' src='"+triviaQuestions[currentQuestion].imageLink + "'/></center>");
 	}
 	
@@ -242,11 +268,12 @@ $(document).ready(function () {
 
         // Timer is replaces with text
         $("#timer").html("<h4>Times Up ! ALL Done!!</h4>");
-        $("btn-reset").attr("style", "display:block;");
+        var button = $("btn-reset") ; 
+		button.attr("style", "display:block;"); //Show play again button 
 
-        $("#questionBlock").html("<h4>Correct Answers: " + correctCount + "</h4>");
-        $("#answerList").html("<h4>Wrong Answers: " + incorrectCount + "</h4>");
-        $("#answerList").append("<h4>UnAnswered: " + unasweredCount + "</h4>");
+        $("#questionBlock").html("<h4 class='text-sucess'>Correct Answers: " + correctCount + "</h4>");
+        $("#answerList").html("<h4 class='text-danger'>Wrong Answers: " + incorrectCount + "</h4>");
+        $("#answerList").append("<h4 class='text-warning'>UnAnswered: " + unasweredCount + "</h4>");
 	 }
 
 	function gameStart() {
@@ -260,15 +287,29 @@ $(document).ready(function () {
 	//--------------------------------------
 
 	console.log("ready!");
+	$('#btn-start').show(); 
+	$('#btn-reset').hide(); 
 
 	//On click of start button the game starts 
 	$('#btn-start').click(function () {
 		console.log("Start Button clicked");
-		$('#btn-start').attr("style", "display:none;");
-		$('#btn-reset').attr("style", "display:none;");
+		$('#btn-start').hide();
+		// $('#btn-reset').show(); 
 		//Start Game 
 		gameStart();
 
 	});
+
+	//Reset Button 
+	//On click of start button the game starts 
+	$('#btn-reset').click(function () {
+		console.log("Reset Button clicked");
+		$('#btn-start').hide();
+		$('#btn-reset').hide(); 
+		//Start Game 
+		gameStart();
+
+	});
+
 
 });	
