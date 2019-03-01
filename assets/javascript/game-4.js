@@ -1,7 +1,7 @@
 
 $(document).ready(function () {
 
-	//     VARIABLES
+	//     VARAIBLES
 	//------------------------------------------
 	//Count Variables 
 	var correctCount = 0;
@@ -9,7 +9,7 @@ $(document).ready(function () {
 	var unasweredCount = 0;
 	var currentQuestion = 0;
 	var currentAnswer;
-	var timeRemaining = 30; //a minute 
+	var timeRemaining = 10; //a minute 
 	var interValid;
 	var clockRunning = true;
 	var answeredBtnClicked = false;
@@ -45,20 +45,22 @@ $(document).ready(function () {
 			var convertedTime = timeConverter(timeRemaining);
 			$("#timer").html("<h2> Time Remaining " + convertedTime + "</h2> <br/>");
 
-			if (timeRemaining === 0) {
-				//stop the clock 
+			if ((timeRemaining === 0) ){
+				//stopt the clock 
 				stopCountDown();
-				//INDEX IS 
-				console.log(currentQuestion + " " + triviaQuestions.length );
-				//Move to next Question 
-				
+
+				// Scoreboard  data is displayed onces time is up 
+				// quizResults();
+
 			}
 		}
 
 	}
 
 	//Resets the clock to stop 
+
 	function stopCountDown() {
+		// console.log("stopCountDown");
 
 		clearInterval(interValid);
 		clockRunning = false;  //Reset 
@@ -92,15 +94,12 @@ $(document).ready(function () {
 
 		//Continue the timer clock 
 		interValid = setInterval(countDown, 1000);//run after every second 
-		//Display Question 
-		$("#questionBlock").text(triviaQuestions[currentQuestion].question);
-		console.log("Question#: " + currentQuestion);
-		//Dynamically creating buttons 
-		dynamicAnswerBtn(); 
 
-	}
+		$('.thisChoice').empty();  //clear old Answer list 
+		$('#questionBlock').empty();  //clear old Question  
 
-	function dynamicAnswerBtn() {
+		$("#questionBlock").html("<center><p id='questiontext' class='text-center text-danger'> " + triviaQuestions[currentQuestion].question + " <br/></p></center>");
+
 		//Loops through all the answer options displays it as a button 
 		for (var i = 0; i < 4; i++) {
 			var answerList = $("<div class='text-center'>");
@@ -110,66 +109,76 @@ $(document).ready(function () {
 			answerList.addClass('thisChoice');
 			$('#answerList').append(answerList);
 		}
-		//RIGHT ANSWER FOR THE QUESTION 
 		currentAnswer = triviaQuestions[currentQuestion].correctAnswer;
-		console.log(currentAnswer); 
 
-		//Add event listiner 
+		nextQuestion();
+
+		//Onclick of the ANswer Buttons 
 		$(".thisChoice").click(function () {
 			answeredBtnClicked = true;
-
 			var id = $(this).attr('data-index');
 
-			console.log(answeredBtnClicked + " ID: " + id);
 			if (id === currentAnswer) {
 				//In case if the answer is correct 
-				correctAnswers();
+				// correctAnswers();
 			} else {
 				//In case of incorrect ANs
-				incorrectAnswers(id);
+				// incorrectAnswers(id);
 			}
 		});
+
+		//if player doesn't click any button 
+		if (answeredBtnClicked) {
+			console.log($(".thisChoice"));
+			timeOuts();
+		}
+	}
+
+	function nextQuestion() {
+		if (currentQuestion == (triviaQuestions.length - 1)) {
+			// setTimeout(scoreboard, 5000)
+		} else {
+			currentQuestion++;
+			setInterval(renderQuestionAns, 5000); // render next Question in 5 secs 
+		}
+		return currentQuestion; //returns the updated Question no.
 	}
 
 	function correctAnswers() {
-		//stop the clock 
-		stopCountDown(); 
-		//Count the correct answer 
-        correctCount++;
-		//Display message 
-        $('#questionBlock').html("Wohoo! Awesome you knew it! <br/>");
-        $('#questionBlock').append("THE ANSWER IS: " + triviaQuestions[currentQuestion].choices[currentAnswer]);
-        $('#answerList').html("<img src='" + triviaQuestions[currentQuestion].imageLink + "'/>");
-		//Display Next question 
-
-    }
-
- 	function incorrectAnswers(answerID) {
-		//stop the clock 
-		stopCountDown(); 
-		//Count the in-correct answer 
-	    incorrectCount++;
-		//Display MEasges 
-        $('#questionBlock').html("OH NO! THAT's not it <br />");
-        $('#questionBlock').append("YOU CHOSE: " + triviaQuestions[currentQuestion].choices[answerID] + ".....HOWEVER THE ANSWER IS: " + triviaQuestions[currentQuestion].choices[currentAnswer]);
-        $('#answerList').html("<img src='" + triviaQuestions[currentQuestion].imageLink + "'/>");
+		correctCount++;
+		$('#questionBlock').html("Wohoo! Awesome you knew it! <br/>");
+		$('#questionBlock').append("THE ANSWER IS: " + triviaQuestions[currentQuestion].choices[currentAnswer]);
+		$('#answerList').html("<img src='" + triviaQuestions[currentQuestion].imageLink + "'/>");
 	}
-	
-	
+
+	function incorrectAnswers(answerID) {
+		incorrectCount++;
+		$('#questionBlock').html("OH NO! THAT's not it <br />");
+		$('#questionBlock').append("YOU CHOSE: " + triviaQuestions[currentQuestion].choices[answerID] + ".....HOWEVER THE ANSWER IS: " + triviaQuestions[currentQuestion].choices[currentAnswer]);
+		$('#answerList').html("<img src='" + triviaQuestions[currentQuestion].imageLink + "'/>");
+	}
+
+
 	function timeOuts() {
-        unasweredCount++;
-        $('#questionBlock').text("YOU FAILED TO CHOOSE AN ANSWER");
-        $('#answerList').html("<img src='"+triviaQuestions[currentQuestion].imageLink + "'/>");
-        stopCountDown(); 
+		unasweredCount++;
+		$('#questionBlock').text("YOU FAILED TO CHOOSE AN ANSWER");
+		// $('#answerList').html("<img src='"+triviaQuestions[currentQuestion].imageLink + "'/>");
+		// stopCountDown(); 
 	}
-	
 
-	function gameStart() {
-		//Calling the Timer function 
-		countDown();
+	function quizResults() {
 
-		renderQuestionAns();
+		// Timer is replaces with text
+		$("#timer").html("<h4>Times Up ! ALL Done!!</h4>");
+		$("btn-reset").attr("style", "display:block;");
+
+		$("#questionBlock").html("<h4>Correct Answers: " + correctCount + "</h4>");
+		$("#answerList").html("<h4>Wrong Answers: " + incorrectCount + "</h4>");
+		$("#answerList").append("<h4>UnAnswered: " + unasweredCount + "</h4>");
 	}
+
+
+
 	// Main PROCESS -  functions
 	//--------------------------------------
 
@@ -181,7 +190,10 @@ $(document).ready(function () {
 		$('#btn-start').attr("style", "display:none;");
 		$('#btn-reset').attr("style", "display:none;");
 		//Start Game 
-		gameStart();
+		//Calling the Timer function 
+		countDown();
+
+		renderQuestionAns();
 
 	});
 
