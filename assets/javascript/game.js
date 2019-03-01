@@ -9,7 +9,7 @@ $(document).ready(function () {
 	var unasweredCount = 0;
 	var currentQuestion = 0;
 	var currentAnswer;
-	var timeRemaining = 15; //a minute 
+	var timeRemaining = 10; //a minute 
 	var interValid, showQA;
 	var clockRunning = true;
 	var answeredBtnClicked = false;
@@ -89,31 +89,29 @@ $(document).ready(function () {
 			$("#timer").html("<h2> Time Remaining " + convertedTime + "</h2>");
 
 			// console.log("Time is inside countDown "+ timeRemaining);
-console.log("countDown Length: "+ triviaQuestions.length); 
-			console.log("countDown currentQuestion: "+ currentQuestion);
-			console.log("timeRemaining" + timeRemaining);
+			// console.log("countDown Length: "+ triviaQuestions.length); 
+			// console.log("countDown currentQuestion: "+ currentQuestion);
+			// console.log("timeRemaining" + timeRemaining);
 			if (timeRemaining === 0) {
 			
 				// Player doesnt answer and time runs out 
 				if(( !answeredBtnClicked) ){
+					console.log("timeRemaining 0 unanswered value", unasweredCount);
 					timeOuts(); 
-				}
-					
 
-				if( currentQuestion == triviaQuestions.length -1  ){
-					quizResults(); //Display scoreboard when reaches the last question 
+					if( currentQuestion === triviaQuestions.length -1  ){
+						setTimeout(quizResults(),5000); //Display scoreboard when reaches the last question afer few secs 
+					}
 				}
-				else {
+				// else {
 					//Move to next Question 
 					nextQuestion(); 
-				}
+				// }
 			}
 			else {
 				//IN CASE LAST QUESTION DISPLAY SCORE BOARD 
 				if( (currentQuestion === triviaQuestions.length -1  ) && (timeRemaining !== 0) ){
-						stopCountDown();
-						quizResults(); 
-						// $('#btn-reset').attr("style", "display:block;");
+					setTimeout(quizResults(), 3000);
 				}
 				
 			}
@@ -132,7 +130,7 @@ console.log("countDown Length: "+ triviaQuestions.length);
 	//Resets the clock to stop 
 	function stopCountDown() {
 		// console.log("stopCountDown");
-		timeRemaining = 15; 
+		timeRemaining = 10; 
 		clearInterval(interValid);
 		clockRunning = false;  //Reset  
 
@@ -160,6 +158,7 @@ console.log("countDown Length: "+ triviaQuestions.length);
 		return minutes + ":" + seconds;
 	}
 
+	//Display Question & Answer choice on the screen 
 	function renderQuestionAns() { 
 
 		//Continue the timer clock 
@@ -177,8 +176,7 @@ console.log("countDown Length: "+ triviaQuestions.length);
 		//Dynamically creating buttons 
 		dynamicAnswerBtn(); 
 
-		// console.log("timeRemaining: "+ timeRemaining + " answeredBtnClicked:"+ answeredBtnClicked);
-		
+		// console.log("timeRemaining: "+ timeRemaining + " answeredBtnClicked:"+ answeredBtnClicked);	
 	}
 
 	function dynamicAnswerBtn() {
@@ -195,7 +193,7 @@ console.log("countDown Length: "+ triviaQuestions.length);
 		currentAnswer = triviaQuestions[currentQuestion].correctAnswer;
 		// console.log(currentAnswer ); 
 
-		//Add event listiner 
+		//Add event listiner for the class '.thisChoice' 
 		$(".thisChoice").click(function () {
 
 			answeredBtnClicked = true;
@@ -212,10 +210,10 @@ console.log("countDown Length: "+ triviaQuestions.length);
 		});
 	}
 
+	//Counts the correct answers and display the results for the answer selected 
 	function correctAnswers() {
 
 		// console.log("Correct ans fun"+ timeRemaining);
-		
 		//stop the clock 
 		stopCountDown(); 
 		//Count the correct answer 
@@ -230,6 +228,7 @@ console.log("countDown Length: "+ triviaQuestions.length);
 		nextQuestion();
 	}
 
+	//Counts the in-correct answers and display the results for the answer selected 
  	function incorrectAnswers(answerID) {
 		// console.log("InCorrect ans fun"+ timeRemaining);
 		//stop the clock 
@@ -243,14 +242,15 @@ console.log("countDown Length: "+ triviaQuestions.length);
 			
 		//Move to next Question 
 		nextQuestion();	
-}
+	}
 	
-	
+	//COunts unanswered questions by the player 
 	function timeOuts() {
 		
 		// clearInterval(showQA);
 		stopCountDown(); 
         unasweredCount++;
+		console.log("Unanswered Count:"+unasweredCount);
 		// answeredBtnClicked = true;
 		$("#timer").html("<h2> Time Remaining " + timeRemaining + "</h2>");
         $('#questionBlock').text("YOU FAILED TO CHOOSE AN ANSWER \n");
@@ -259,7 +259,7 @@ console.log("countDown Length: "+ triviaQuestions.length);
 	}
 	
 	function quizResults() {
-
+		stopCountDown();
         // Timer is replaces with text
         $("#timer").html("<h4>Times Up ! ALL Done!!</h4>");
         var button = $("#btn-reset") ; 
@@ -285,7 +285,7 @@ console.log("countDown Length: "+ triviaQuestions.length);
 		$("#questionBlock").empty();
 		$("#answerList").empty();
 		currentQuestion = 0; 
-		timeRemaining = 15; 
+		timeRemaining = 10; 
 		correctCount = 0;
 		incorrectCount = 0;
 		unasweredCount = 0;
