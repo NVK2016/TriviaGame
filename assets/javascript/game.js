@@ -9,7 +9,7 @@ $(document).ready(function () {
 	var unasweredCount = 0;
 	var currentQuestion = 0;
 	var currentAnswer;
-	var timeRemaining = 10; //a minute 
+	var timeRemaining = 15; //a minute 
 	var interValid, showQA;
 	var clockRunning = true;
 	var answeredBtnClicked = false;
@@ -88,35 +88,27 @@ $(document).ready(function () {
 			var convertedTime = timeConverter(timeRemaining);
 			$("#timer").html("<h2> Time Remaining " + convertedTime + "</h2>");
 
-			// console.log("Time is inside countDown "+ timeRemaining);
-			// console.log("countDown Length: "+ triviaQuestions.length); 
-			// console.log("countDown currentQuestion: "+ currentQuestion);
-			// console.log("timeRemaining" + timeRemaining + "ansewered btn:" + answeredBtnClicked);
 			if (timeRemaining === 0) {
 			
-				// Player doesnt answer and time runs out 
+				// Player doesn't answer and time runs out 
 				if(( !answeredBtnClicked) ){
 					
 					timeOuts(); 
-					// console.log("timeRemaining 0 unanswered value", unasweredCount);
-				}
-
-				if( currentQuestion === triviaQuestions.length -1  ){
-					console.log("Last question: "+ answeredBtnClicked);
-					setTimeout(quizResults(),5000); //Display scoreboard when reaches the last question afer few secs 
-				}
-				else {
-					//Move to next Question 
-					nextQuestion(); 
+					//Displays Scoreboard only  after the last question is displayed 
+					if( currentQuestion > triviaQuestions.length -1  ){
+						quizResults();
+					}
+					else {
+						//Move to next Question 
+						nextQuestion(); 
+					}
 				}
 			}
 			else {
 				//IN CASE LAST QUESTION DISPLAY SCORE BOARD 
-				if ((currentQuestion === triviaQuestions.length -1) && answeredBtnClicked){
-					console.log("Last question: BTN"+ answeredBtnClicked);
-					setTimeout(quizResults(), 5000);
+				if ((currentQuestion > triviaQuestions.length -1)){
+					quizResults();
 				}
-				
 			}
 		}
 	}
@@ -133,7 +125,7 @@ $(document).ready(function () {
 	//Resets the clock to stop 
 	function stopCountDown() {
 		// console.log("stopCountDown");
-		timeRemaining = 10; 
+		timeRemaining = 15; 
 		clearInterval(interValid);
 		clockRunning = false;  //Reset  
 
@@ -174,12 +166,9 @@ $(document).ready(function () {
 		//Display Question 
 		$("#questionBlock").text(triviaQuestions[currentQuestion].question);
 		$("#questionBlock").append("<br /> " );
-		// console.log("renderQuestionAns#: " + currentQuestion);
 
 		//Dynamically creating buttons 
 		dynamicAnswerBtn(); 
-
-		// console.log("timeRemaining: "+ timeRemaining + " answeredBtnClicked:"+ answeredBtnClicked);	
 	}
 
 	function dynamicAnswerBtn() {
@@ -194,14 +183,11 @@ $(document).ready(function () {
 		}
 		//RIGHT ANSWER FOR THE QUESTION 
 		currentAnswer = triviaQuestions[currentQuestion].correctAnswer;
-		// console.log(currentAnswer ); 
 
-		//Add event listiner for the class '.thisChoice' 
+		//Add event listiner for the class '.thisChoice' for the dynamic buttons created 
 		$(".thisChoice").click(function () {
 
-			
 			var id = $(this).attr('data-index');
-			// console.log(answeredBtnClicked + " ID: " + $(this).attr('data-index') + "Correct ans:" + currentAnswer);
 
 			if ( id == currentAnswer) {
 				//In case if the answer is correct 
@@ -215,13 +201,13 @@ $(document).ready(function () {
 
 	//Counts the correct answers and display the results for the answer selected 
 	function correctAnswers() {
+
 		answeredBtnClicked = true;
-		// console.log("Correct ans fun"+ timeRemaining);
+
 		//stop the clock 
 		stopCountDown(); 
 		//Count the correct answer 
         correctCount++;
-		console.log("correctCount: "+ correctCount);
 
 		//Display message 
         $('#questionBlock').html("Wohoo! Awesome you knew it! <br/>");
@@ -234,8 +220,8 @@ $(document).ready(function () {
 
 	//Counts the in-correct answers and display the results for the answer selected 
  	function incorrectAnswers(answerID) {
-	answeredBtnClicked = true;
-		// console.log("InCorrect ans fun"+ timeRemaining);
+
+		answeredBtnClicked = true;
 		//stop the clock 
 		stopCountDown(); 
 		//Count the in-correct answer 
@@ -252,6 +238,7 @@ $(document).ready(function () {
 	
 	//COunts unanswered questions by the player 
 	function timeOuts() {
+
 		answeredBtnClicked = false;
 		// clearInterval(showQA);
 		stopCountDown(); 
@@ -265,7 +252,8 @@ $(document).ready(function () {
 	}
 	
 	function quizResults() {
-		stopCountDown();
+
+		stopCountDown(); 
         // Timer is replaces with text
         $("#timer").html("<h4> Times Up ! ALL Done!!</h4>");
         var button = $("#btn-reset") ; 
@@ -284,14 +272,14 @@ $(document).ready(function () {
 		renderQuestionAns();
 	}
 
-	//Resets all values used 
+	//Resets all elements for a fresh start to the game 
 	function resetGame() {
 
-		 $("#timer").empty();
+		$("#timer").empty();
 		$("#questionBlock").empty();
 		$("#answerList").empty();
 		currentQuestion = 0; 
-		timeRemaining = 10; 
+		timeRemaining = 15; 
 		correctCount = 0;
 		incorrectCount = 0;
 		unasweredCount = 0;

@@ -31,7 +31,3 @@ If the player doesn't enter his/her choice then the game will consider it as una
 * Bootstrap  
 * Javascript , JQuery  - create dynamic elements ,acess the event listiners , show error messages  and images dynamically. Holds the core logic of the game. 
 
-
-### WHAT is BUGGING ME HERE (KNOW BUG IN THE PROGRAM): 
-
-On the final screen, it does show the scoreboard results  but doesn't considered the last record in case if the question has not been answered by the player. 
