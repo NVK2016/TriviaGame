@@ -32,3 +32,9 @@ img{
     width:250px; 
     height:250px; 
 }
+
+/* CSS EFFECT ON HOVERING OVER THE BUTTONS  */
+.thisChoice:hover{
+    border:1px solid #999;
+    color: blue;
+}

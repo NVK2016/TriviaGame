@@ -10,7 +10,7 @@ $(document).ready(function () {
 	var currentQuestion = 0;
 	var currentAnswer;
 	var timeRemaining = 15; //a minute 
-	var interValid, showQA;
+	var timeInterval, showQA;
 	var clockRunning = true;
 	var answeredBtnClicked = false;
 
@@ -118,6 +118,7 @@ $(document).ready(function () {
 		clockRunning = true; 
 
 		currentQuestion++;
+
 		//Calling the function once in set interval 
 		showQA = setTimeout(renderQuestionAns, 3000);
 	}
@@ -126,7 +127,7 @@ $(document).ready(function () {
 	function stopCountDown() {
 		// console.log("stopCountDown");
 		timeRemaining = 15; 
-		clearInterval(interValid);
+		clearInterval(timeInterval);
 		clockRunning = false;  //Reset  
 
 	}
@@ -157,7 +158,7 @@ $(document).ready(function () {
 	function renderQuestionAns() { 
 
 		//Continue the timer clock 
-		interValid = setInterval(countDown, 1000);//run after every second 
+		timeInterval = setInterval(countDown, 1000);//run after every second 
 		clearInterval(showQA); 
 		//Reset the button click event variable to false 
 		answeredBtnClicked = false; 
@@ -212,6 +213,8 @@ $(document).ready(function () {
 		//Display message 
         $('#questionBlock').html("Wohoo! Awesome you knew it! <br/>");
         $('#questionBlock').append("THE ANSWER IS: " + triviaQuestions[currentQuestion].choices[currentAnswer]);
+		//Change the color of the message when the answer is wrong 
+		// $('#questionBlock').addClass('correct'); 
         $('#answerList').html("<center><img class='img-thumbnail' src='" + triviaQuestions[currentQuestion].imageLink +"'/></center>");
 			
 		//Move to next Question 
@@ -226,10 +229,12 @@ $(document).ready(function () {
 		stopCountDown(); 
 		//Count the in-correct answer 
 	    incorrectCount++;
-		console.log("incorrectCount Count:"+unasweredCount);
+
 		//Display MEasges 
         $('#questionBlock').html("OH NO! THAT's not it <br />");
         $('#questionBlock').append("YOU CHOSE: " + triviaQuestions[currentQuestion].choices[answerID] + ".....HOWEVER THE ANSWER IS: " + triviaQuestions[currentQuestion].choices[currentAnswer]);
+		//Change the color of the message when the answer is wrong 
+		// $('#questionBlock').css({"color":"red"});
         $('#answerList').html("<center><img class='img-thumbnail' src='" + triviaQuestions[currentQuestion].imageLink + "'/></center>");
 			
 		//Move to next Question 
@@ -243,9 +248,8 @@ $(document).ready(function () {
 		// clearInterval(showQA);
 		stopCountDown(); 
         unasweredCount++;
-		console.log("Unanswered Count:"+unasweredCount);
-		// answeredBtnClicked = true;
-		$("#timer").html("<h2> Time Remaining " + timeRemaining + "</h2>");
+
+		// $("#timer").html("<h2> Time Remaining " + timeRemaining + "</h2>");
         $('#questionBlock').text("YOU FAILED TO CHOOSE AN ANSWER \n");
         $('#questionBlock').append("\n The answer is " +triviaQuestions[currentQuestion].choices[currentAnswer] );
         $('#answerList').html("<center><img class='img-thumbnail' src='"+triviaQuestions[currentQuestion].imageLink + "'/></center>");
