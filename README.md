@@ -9,6 +9,14 @@
 This game will test your knowlege about Marvel & DC comic characters. Game will display one question for 15 secs each.Like that it will display 10 questions one by one whether you choose to answer it or not.
 If the player doesn't enter his/her choice then the game will consider it as unanswered. At last the game will display the scoreboard after the last question is displayed. 
 
+### BUILT WITH: 
+* HTML -- hold the elements 
+* CSS  -- custom changes to the display of data 
+* Bootstrap  
+* Javascript , JQuery  - create dynamic elements ,acess the event listiners , show error messages  and images dynamically. Holds the core logic of the game. 
+
+### GAME LINK 
+<a href="https://nvk2016.github.io/TriviaGame/">Ultimate Superhero Trivia</a>
 
 ## GAME SCREENSHOT : 
 ![Start-Screen](https://github.com/NVK2016/TriviaGame/blob/master/assets/images/Trivia-Start-Page.png?raw=true)
@@ -21,13 +29,12 @@ If the player doesn't enter his/her choice then the game will consider it as una
 
 ![Answer-Screen](https://github.com/NVK2016/TriviaGame/blob/master/assets/images/Trivia-Screenshot-Result.png?raw=true)
 
-### GAME LINK 
-<a href="https://nvk2016.github.io/TriviaGame/">Ultimate Superhero Trivia</a>
+<br /> Scoreboard is displayed 
+
+![Scoreboard](https://github.com/NVK2016/TriviaGame/blob/master/assets/images/Trivia-Quiz-Result.png?raw=true)
 
 
-### BUILT WITH: 
-* HTML -- hold the elements 
-* CSS  -- custom changes to the display of data 
-* Bootstrap  
-* Javascript , JQuery  - create dynamic elements ,acess the event listiners , show error messages  and images dynamically. Holds the core logic of the game. 
+
+
+
 
