@@ -34,7 +34,8 @@ If the player doesn't enter his/her choice then the game will consider it as una
 ![Scoreboard](https://github.com/NVK2016/TriviaGame/blob/master/assets/images/Trivia-Quiz-Result.png?raw=true)
 
 
-
+#### Owner 
+Namita Shenai 
 
 
 
